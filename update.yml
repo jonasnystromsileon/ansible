@@ -1,26 +1,14 @@
 ---
-- name: Update APT cache
-  apt:
-    update_cache: yes
-    cache_valid_time: 3600
+- name: Update all packages on Ubuntu/Debian systems
+  hosts: all
+  become: yes  # Use sudo to become root, required for installing updates
 
-- name: Check if there are available updates
-  command: /usr/lib/update-notifier/apt-check --package-names
-  register: pkg_list
+  tasks:
+  - name: Update apt repo and cache on all Debian/Ubuntu boxes
+    ansible.builtin.apt:
+      update_cache: yes
+      cache_valid_time: 3600  # Update the cache if it's older than 1 hour
 
-- name: Perform upgrade of all packages to the latest version
-  apt:
-    upgrade: dist
-  when: pkg_list.stderr != ""
-
-- name: Check if a reboot is required
-  stat: path=/var/run/reboot-required get_md5=no
-  register: reboot_flag
-
-- name: Reboot the server is needed
-  reboot:
-    reboot_timeout: 300
-  when: reboot_flag.stat.exists == true
-
-- debug:
-    msg: "Server is back up and running"
+  - name: Upgrade all packages to the latest version
+    ansible.builtin.apt:
+      upgrade: dist
