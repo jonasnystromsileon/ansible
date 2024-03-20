@@ -4,4 +4,5 @@
 
   tasks:
     - name: Display hostname
+      debug:
         msg: "The hostname of the target is {{ ansible_hostname }}"
