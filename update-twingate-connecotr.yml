@@ -1,6 +1,6 @@
 ---
 - name: Update Twingate Connector
-  hosts: twingate_connectors
+  hosts: all
   become: yes  # Become root to perform system updates
   tasks:
 
