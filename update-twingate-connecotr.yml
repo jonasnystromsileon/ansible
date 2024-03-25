@@ -8,13 +8,6 @@
         update_cache: yes
       changed_when: false
 
-    - name: Check if Twingate Connector update is available
-      ansible.builtin.apt:
-        name: twingate-connector
-        state: latest
-      register: update_result
-      changed_when: update_result.results|length > 0
-
     - name: Upgrade Twingate Connector if an update is available
       ansible.builtin.apt:
         name: twingate-connector
