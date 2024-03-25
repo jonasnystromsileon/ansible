@@ -1,0 +1,26 @@
+---
+- name: Update Twingate Connector
+  hosts: twingate_connectors
+  become: yes  # Become root to perform system updates
+  tasks:
+
+    - name: Check if Twingate Connector update is available
+      ansible.builtin.apt:
+        update_cache: yes
+        name: twingate-connector
+        state: latest
+      register: update_result
+      changed_when: "'0 upgraded, 0 newly installed, 0 to remove and' not in update_result.stdout"
+
+    - name: Upgrade Twingate Connector if an update is available
+      ansible.builtin.apt:
+        name: twingate-connector
+        state: latest
+        force_apt_get: yes
+      when: update_result.changed
+
+    - name: Restart Twingate Connector service to apply the update
+      ansible.builtin.service:
+        name: twingate-connector
+        state: restarted
+      when: update_result.changed
