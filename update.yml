@@ -1,7 +1,7 @@
 ---
 - name: Update all packages on all hosts
   hosts: all
-  become: yes
+  become: yes  # Ensure that all tasks run with elevated privileges
   tasks:
     - name: Update package list and upgrade all packages (Debian/Ubuntu)
       apt:
