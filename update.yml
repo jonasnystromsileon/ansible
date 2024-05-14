@@ -1,8 +1,22 @@
-- hosts: all
-  become: true
+---
+- name: Update all packages on all hosts
+  hosts: all
+  become: yes
   tasks:
-    - name: Update apt repo and cache on all Debian/Ubuntu boxes
-    apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 86400 #One day
+    - name: Update package list and upgrade all packages (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_os_family == "Debian"
+
+    - name: Update all packages (Red Hat/CentOS/Fedora)
+      yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Update all packages (Fedora)
+      dnf:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "Fedora"
