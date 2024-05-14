@@ -9,7 +9,6 @@
   tasks:
     - name: Update apt package manager cache (Debian-based systems)
       apt:
-        update_cache: yes
       when: ansible_os_family == "Debian"
 
     - name: Ensure the latest version of the Twingate Connector is installed (Debian-based systems)
