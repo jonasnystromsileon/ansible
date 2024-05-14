@@ -1,22 +1,37 @@
 ---
-- name: Update all packages on all hosts
+- name: Update Twingate Connector
   hosts: all
-  become: yes  # Ensure that all tasks run with elevated privileges
+  become: yes
+
+  vars:
+    package_name: twingate-connector
+
   tasks:
-    - name: Update package list and upgrade all packages (Debian/Ubuntu)
+    - name: Update apt package manager cache (Debian-based systems)
       apt:
-        update: yes
-        upgrade: full
+        update_cache: yes
       when: ansible_os_family == "Debian"
 
-    - name: Update all packages (Red Hat/CentOS/Fedora)
+    - name: Ensure the latest version of the Twingate Connector is installed (Debian-based systems)
+      apt:
+        name: "{{ package_name }}"
+        state: latest
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure the latest version of the Twingate Connector is installed (Red Hat-based systems)
       yum:
-        name: "*"
+        name: "{{ package_name }}"
         state: latest
       when: ansible_os_family == "RedHat"
 
-    - name: Update all packages (Fedora)
-      dnf:
-        name: "*"
-        state: latest
-      when: ansible_os_family == "Fedora"
+    - name: Check if Twingate Connector service is running
+      service:
+        name: twingate-connector
+        state: started
+      ignore_errors: yes
+
+    - name: Restart Twingate Connector service if updated
+      service:
+        name: twingate-connector
+        state: restarted
+      when: service_result.changed
