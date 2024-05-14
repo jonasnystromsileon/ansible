@@ -5,7 +5,6 @@
   tasks:
     - name: Update package list and upgrade all packages (Debian/Ubuntu)
       apt:
-        update_cache: yes
         upgrade: dist
       when: ansible_os_family == "Debian"
 
