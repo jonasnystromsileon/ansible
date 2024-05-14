@@ -5,7 +5,7 @@
   tasks:
     - name: Update package list and upgrade all packages (Debian/Ubuntu)
       apt:
-        upgrade: twingate-connector
+        upgrade: full
       when: ansible_os_family == "Debian"
 
     - name: Update all packages (Red Hat/CentOS/Fedora)
