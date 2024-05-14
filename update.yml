@@ -5,6 +5,7 @@
   tasks:
     - name: Update package list and upgrade all packages (Debian/Ubuntu)
       apt:
+        become: yes  # Ensure that all tasks run with elevated privileges
         update_cache: yes
         upgrade: dist
       when: ansible_os_family == "Debian"
